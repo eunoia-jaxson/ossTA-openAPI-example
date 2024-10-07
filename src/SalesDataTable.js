@@ -14,8 +14,8 @@ const SalesDataTable = ({
         <TableHead>
           <TableRow>
             <TableHeader>일자</TableHeader>
-            <TableHeader>매출처 이름</TableHeader>
             <TableHeader>수협 이름</TableHeader>
+            <TableHeader>매출처 이름</TableHeader>
             <TableHeader>구매 번호</TableHeader>
             <TableHeader>구매 순번</TableHeader>
             <TableHeader>판매 물품명</TableHeader>
