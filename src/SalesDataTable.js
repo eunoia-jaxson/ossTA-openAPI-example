@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 
 // Main React component
@@ -7,7 +7,12 @@ const SalesDataTable = ({
   currentPage,
   totalPages,
   handlePageChange,
+  searchTerm,
 }) => {
+  useEffect(() => {
+    data.length !== 0 ? handlePageChange(1) : handlePageChange(0);
+  }, [searchTerm]);
+
   return (
     <>
       <Table>
@@ -46,7 +51,7 @@ const SalesDataTable = ({
       <Pagination>
         <PageButton
           onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
+          disabled={currentPage === 1 || totalPages === 0}
         >
           이전
         </PageButton>

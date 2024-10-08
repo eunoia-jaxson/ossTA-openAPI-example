@@ -15,7 +15,9 @@ function App() {
 
   // 날짜 포맷 함수 (YYYYMMDD 형식으로 변환)
   const getCurrentDate = () => {
-    const date = new Date();
+    // 현재 날짜 - 1를 가져와서 YYYYMMDD 형식으로 변환
+    const date = new Date(Date.now() - 86400000);
+    // const date = new Date();
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
@@ -121,6 +123,12 @@ function App() {
     fetchData();
   }, []);
 
+  const filteredData = data
+    ? data.filter((item) =>
+        item.mprcStdCodeNm.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : [];
+
   const handleSearch = (event) => {
     setSearchTerm(event.target.value); // 검색어 업데이트
     setCurrentPage(1); // 페이지 초기화
@@ -130,12 +138,6 @@ function App() {
     setSearchTerm(""); // 검색어 초기화
     setCurrentPage(1); // 페이지 초기화
   };
-
-  const filteredData = data
-    ? data.filter((item) =>
-        item.mprcStdCodeNm.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    : [];
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -175,6 +177,7 @@ function App() {
         currentPage={currentPage}
         totalPages={totalPages}
         handlePageChange={handlePageChange}
+        searchTerm={searchTerm}
       />
     </Background>
   );
@@ -223,5 +226,5 @@ const SearchIcon = styled.div`
   right: 10px;
   font-size: 16px;
   color: #ccc;
-  cursor: ${(props) => (props.enable ? "pointer" : "default")};
+  cursor: ${(props) => (props.enable.length !== 0 ? "pointer" : "default")};
 `;
