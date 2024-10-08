@@ -20,9 +20,6 @@ const SalesDataTable = ({
           <TableRow>
             <TableHeader>일자</TableHeader>
             <TableHeader>수협 이름</TableHeader>
-            <TableHeader>매출처 이름</TableHeader>
-            <TableHeader>구매 번호</TableHeader>
-            <TableHeader>구매 순번</TableHeader>
             <TableHeader>판매 물품명</TableHeader>
             <TableHeader>판매 단량</TableHeader>
             <TableHeader>상품 단위명</TableHeader>
@@ -34,9 +31,6 @@ const SalesDataTable = ({
             <TableRow key={index}>
               <TableData>{item.csmtDe}</TableData>
               <TableData>{item.mxtrNm}</TableData>
-              <TableData>{item.csmtmktNm}</TableData>
-              <TableData>{item.prchasNo}</TableData>
-              <TableData>{item.prchasSn}</TableData>
               <TableData>{item.mprcStdCodeNm}</TableData>
               <TableData>{Number(item.csmtUnqt).toLocaleString()}</TableData>
               <TableData>{item.goodsUnitNm}</TableData>

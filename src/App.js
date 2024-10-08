@@ -4,6 +4,7 @@ import SalesDataTable from "./SalesDataTable";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faTimes } from "@fortawesome/free-solid-svg-icons";
+import BarChart from "./BarChart";
 
 function App() {
   const [data, setData] = useState(null);
@@ -143,6 +144,70 @@ function App() {
     setCurrentPage(page);
   };
 
+  const getAverageByAssociation = (data) => {
+    const sumByAssociation = {}; // 어종별 합계
+    const countByAssociation = {}; // 어종별 등장 횟수
+
+    data.forEach((item) => {
+      const association = item.mxtrNm; // 수협 이름 (어종 이름)
+      const unitPrice = parseInt(
+        item.csmtUntpc.replace("원", "").replace(",", "")
+      ); // 판매 단가 (원 단위 제거)
+
+      // 어종별로 합계와 등장 횟수 기록
+      if (!sumByAssociation[association]) {
+        sumByAssociation[association] = 0;
+        countByAssociation[association] = 0;
+      }
+
+      sumByAssociation[association] += unitPrice; // 합계 계산
+      countByAssociation[association] += 1; // 등장 횟수 증가
+    });
+
+    // 어종별 평균 계산
+    const averageByAssociation = {};
+    Object.keys(sumByAssociation).forEach((association) => {
+      averageByAssociation[association] = Math.round(
+        sumByAssociation[association] / countByAssociation[association]
+      ); // 평균 계산
+    });
+
+    return averageByAssociation;
+  };
+
+  const getAveragePriceBySpecies = (data) => {
+    const sumBySpecies = {};
+    const countBySpecies = {};
+
+    data.forEach((item) => {
+      const species = item.mprcStdCodeNm; // 어종 이름
+      const unitPrice = parseInt(
+        item.csmtUntpc.replace("원", "").replace(",", "")
+      ); // 판매 단가 (원 단위 제거)
+
+      // 어종별 판매 단가 합계 계산
+      if (!sumBySpecies[species]) {
+        sumBySpecies[species] = 0;
+        countBySpecies[species] = 0; // 해당 어종의 판매 횟수 카운트
+      }
+      sumBySpecies[species] += unitPrice;
+      countBySpecies[species] += 1;
+    });
+
+    // 어종별 평균 계산
+    const averageBySpecies = {};
+    Object.keys(sumBySpecies).forEach((species) => {
+      averageBySpecies[species] = Math.round(
+        sumBySpecies[species] / countBySpecies[species]
+      );
+    });
+
+    return averageBySpecies;
+  };
+
+  const averagePriceBySpecies = getAveragePriceBySpecies(filteredData);
+  const averageByAssociation = getAverageByAssociation(filteredData);
+
   const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
   const currentData = filteredData.slice(
@@ -172,13 +237,24 @@ function App() {
           </SearchIcon>
         </SearchContainer>
       </Header>
-      <SalesDataTable
-        data={currentData}
-        currentPage={currentPage}
-        totalPages={totalPages}
-        handlePageChange={handlePageChange}
-        searchTerm={searchTerm}
-      />
+      <TableContainer>
+        <Div>
+          <SalesDataTable
+            data={currentData}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            handlePageChange={handlePageChange}
+            searchTerm={searchTerm}
+          />
+        </Div>
+        <div style={{ width: "50px" }} />
+        <Div>
+          <BarChart
+            data={searchTerm ? averageByAssociation : averagePriceBySpecies}
+            searchTerm={searchTerm}
+          />
+        </Div>
+      </TableContainer>
     </Background>
   );
 }
@@ -227,4 +303,14 @@ const SearchIcon = styled.div`
   font-size: 16px;
   color: #ccc;
   cursor: ${(props) => (props.enable.length !== 0 ? "pointer" : "default")};
+`;
+
+const Div = styled.div`
+  width: 100%;
+`;
+
+const TableContainer = styled.div`
+  display: flex;
+  align-items: space-between;
+  width: 100%; // 테이블의 너비를 조정
 `;
