@@ -12,7 +12,7 @@ const BarChart = ({ data, searchTerm }) => {
     return `rgba(${r}, ${g}, ${b}, 0.6)`; // 투명도 0.6로 설정
   };
 
-  const randomColors = labels.map(() => getRandomColor()); // 각 막대에 랜덤 색상 적용
+  const randomColor = getRandomColor();
 
   const chartData = {
     labels: labels,
@@ -23,7 +23,7 @@ const BarChart = ({ data, searchTerm }) => {
           ? `수협별 ${searchTerm} 판매 단가 평균`
           : "어종별 판매 단가 평균",
         data: values,
-        backgroundColor: randomColors, // 막대 색상 설정
+        backgroundColor: labels.map(() => randomColor), // 막대 색상 설정
         barThickness: 20, // 막대의 고정된 너비를 설정 (픽셀 단위)
         maxBarThickness: 20, // 막대의 최대 너비를 제한
       },
